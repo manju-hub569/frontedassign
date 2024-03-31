@@ -3,6 +3,8 @@ import { useState , useEffect} from 'react';
 import axios from 'axios';
 function App() {
 
+  const [bool, setBool] = useState(false)
+
   const [user , setUser] = useState([]);
 
   const [data , setData] = useState({
@@ -11,6 +13,38 @@ function App() {
     password : '',
     dob :''
   })
+
+  const [datas , setDatas] = useState({
+    names : '',
+    emails  : '',
+    passwords : '',
+    dobs :''
+  })
+
+  // const subForms = async (e) => {
+  //   e.preventDefault()
+  //   // const subs = await axios.post('http://localhost:3001/users' , {
+  //   //   names : datas.names,
+  //   //   emails : datas.emails,
+  //   //   passwords : datas.passwords,
+  //   //   dobs : datas.dobs
+  //   // });
+  //   // if(subs.data.status == true) {
+  //   //   alert(subs.data.msg)
+  //   // }
+  //   // setBool(!bool)
+  //   axios.put('http://localhost:3001/users' , {
+  //     id : Id,
+  //     names : datas.names,
+  //     emails : datas.emails,
+  //     passwords : datas.passwords,
+  //     dobs : datas.dobs
+  //   }).then((dt) => {
+  //     if(dt) {
+  //       setBool(!bool)
+  //     }
+  //   })
+  // }
 
   useEffect(() => {
     axios.get('http://localhost:3001/users').then((dt) => {
@@ -38,11 +72,26 @@ function App() {
     setData({...data , [name] : value})
   }
 
+  let names ; let values;
+  const getForms = (e) => {
+    names = e.target.name;
+    values = e.target.value
+    setDatas({...datas , [names] : values})
+  }
+
   const updte = (Id) => {
-    // axios.put('http://localhost:3001/users' , {
-    //   id : Id,
-    // })
-    alert(Id)
+    setBool(!bool)
+    axios.put('http://localhost:3001/users' , {
+      id : Id,
+      names : datas.names,
+      emails : datas.emails,
+      passwords : datas.passwords,
+      dobs : datas.dobs
+    }).then((dt)=>{
+      if(dt){
+        setBool(!bool)
+      }
+    })
   }
 
   const delte = (Id) => {
@@ -112,6 +161,29 @@ function App() {
             </table>
         </div> 
       </div>
+
+<div className='modal' style={{ display: bool ? 'block' : 'none' }}>
+<form>
+      <div className = "inpt">
+            <div>
+               <label>Name</label> <input type = "text" name = "names" value = {data.names} onChange={getForms} />
+            </div>
+            <div>
+            <label>Email</label> <input type = "text" name = "emails" value = {data.emails} onChange={getForms} />
+            </div>
+            <div>
+            <label>password</label><input type = "password" name = "passwords" value = {data.passwords} onChange={getForms} />
+            </div>
+            <div>
+            <label>DOB</label> <input type = "date" name = "dobs" value = {data.dobs} onChange={getForms}/>
+            </div>
+            <div>
+              <button onClick={updte}>update</button>
+            </div>
+        </div>       
+      </form>
+</div>
+
     </>
   );
 }
