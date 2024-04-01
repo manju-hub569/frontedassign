@@ -50,7 +50,7 @@ function App() {
     axios.get('http://localhost:3001/users').then((dt) => {
       setUser(dt.data.data)
     })
-  },[data]);
+  },[user]);
 
   const subForm = async (e) => {
     e.preventDefault()
